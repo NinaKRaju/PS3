@@ -1,12 +1,12 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 public class HuffmanCodeTree implements Huffman{
+
+
     @Override
     public Map<Character, Long> countFrequencies(String pathName) throws IOException {
         Map<Character,Long> result = new HashMap<>();
@@ -26,7 +26,7 @@ public class HuffmanCodeTree implements Huffman{
         return result;
     }
 
-     @Override
+    @Override
     public BinaryTree<CodeTreeElement> makeCodeTree(Map<Character, Long> frequencies) {
         PriorityQueue<BinaryTree<CodeTreeElement>> pq = new PriorityQueue<>(new TreeComparator());
         //returns if file is empty
@@ -64,7 +64,20 @@ public class HuffmanCodeTree implements Huffman{
 
     @Override
     public Map<Character, String> computeCodes(BinaryTree<CodeTreeElement> codeTree) {
-        return Map.of();
+        Map<Character,String> codes = new HashMap<>();
+        preOrder(codeTree, "", codes);
+        return codes;
+    }
+    public void preOrder(BinaryTree<CodeTreeElement> root, String code, Map<Character,String> codes) {
+        if (root == null) return;
+
+        if(root.isLeaf()){
+            codes.put(root.getData().getChar(), code);
+            return;
+        }
+        preOrder(root.getLeft(), code + "0", codes);
+        preOrder(root.getRight(),code + "1",codes);
+
     }
 
     @Override
