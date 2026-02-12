@@ -28,7 +28,36 @@ public class HuffmanCodeTree implements Huffman{
 
     @Override
     public BinaryTree<CodeTreeElement> makeCodeTree(Map<Character, Long> frequencies) {
-        return null;
+        PriorityQueue<BinaryTree<CodeTreeElement>> pq = new PriorityQueue<>(new TreeComparator());
+
+        for(Character key: frequencies.keySet()){
+            CodeTreeElement current = new CodeTreeElement(frequencies.get(key), key);
+            BinaryTree<CodeTreeElement> currentNode = new BinaryTree<>(current);
+            pq.add(currentNode);
+        }
+
+
+        //huffman algorithm
+
+        while(pq.size()>1){
+
+            BinaryTree<CodeTreeElement> left = pq.peek();
+            pq.remove(pq.peek());
+            Long rootFreq = left.getData().getFrequency();
+
+            BinaryTree<CodeTreeElement> right = pq.peek();
+            pq.remove(pq.peek());
+            rootFreq += right.getData().getFrequency();
+
+            BinaryTree<CodeTreeElement> newTree = new BinaryTree<CodeTreeElement>(new CodeTreeElement(rootFreq, null));
+            newTree.setLeft(left);
+            newTree.setRight(right);
+
+            pq.add(newTree);
+
+        }
+
+        return pq.peek();
     }
 
     @Override
