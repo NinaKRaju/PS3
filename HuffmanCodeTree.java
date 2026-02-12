@@ -26,37 +26,39 @@ public class HuffmanCodeTree implements Huffman{
         return result;
     }
 
-    @Override
+     @Override
     public BinaryTree<CodeTreeElement> makeCodeTree(Map<Character, Long> frequencies) {
         PriorityQueue<BinaryTree<CodeTreeElement>> pq = new PriorityQueue<>(new TreeComparator());
-
+        //returns if file is empty
+        if(frequencies.isEmpty()){
+            return null;
+        }
         for(Character key: frequencies.keySet()){
+            //creates a new binary tree for each character and adds it to the priority tree
             CodeTreeElement current = new CodeTreeElement(frequencies.get(key), key);
             BinaryTree<CodeTreeElement> currentNode = new BinaryTree<>(current);
             pq.add(currentNode);
+
         }
 
-
         //huffman algorithm
-
         while(pq.size()>1){
-
+            //creates a binary tree for left node and sets it equal to the lowest freq tree in queue
             BinaryTree<CodeTreeElement> left = pq.peek();
             pq.remove(pq.peek());
             Long rootFreq = left.getData().getFrequency();
-
+            //same for second element in queue, assign to right
             BinaryTree<CodeTreeElement> right = pq.peek();
             pq.remove(pq.peek());
             rootFreq += right.getData().getFrequency();
-
+            //creates a root node with freq= combined left and right, children are left ad right
             BinaryTree<CodeTreeElement> newTree = new BinaryTree<CodeTreeElement>(new CodeTreeElement(rootFreq, null));
             newTree.setLeft(left);
             newTree.setRight(right);
-
+            //adds new tree back into queue
             pq.add(newTree);
-
         }
-
+        //returns the single tree in the priority queue
         return pq.peek();
     }
 
