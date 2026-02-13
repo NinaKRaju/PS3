@@ -1,0 +1,39 @@
+import java.io.IOException;
+import java.util.*;
+
+
+public class test {
+
+    public ArrayList<String> codes(BinaryTree<Integer> codeTree) {
+        ArrayList<String> result = new ArrayList<>();
+        inOrderTraversal(codeTree, "", result);
+        for(String s: result){
+            System.out.println(s);
+        }
+        return result;
+    }
+
+    public void inOrderTraversal(BinaryTree<Integer> root, String code, ArrayList<String> result) {
+        if (root == null) return;
+
+        if(root.isLeaf()){
+            result.add(code);
+            return;
+        }
+
+        inOrderTraversal(root.getLeft(), code + "0", result);
+        inOrderTraversal(root.getRight(), code + "1", result);
+    }
+
+    public static void main(String[] args) {
+        test a = new test();
+        BinaryTree<Integer> root = new BinaryTree<Integer>(2);
+        root.setLeft(new BinaryTree<>(1));
+        root.setRight(new BinaryTree<>(3));
+        root.getLeft().setLeft(new BinaryTree<>(4));
+        root.getLeft().setRight(new BinaryTree<>(5));
+
+        a.codes(root);
+
+    }
+}
