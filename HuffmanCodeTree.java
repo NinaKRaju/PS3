@@ -1,7 +1,14 @@
+/**
+ * Problem Set #3
+ *
+ * @author Nina Raju
+ * @author Erica Chemmanoor
+ * Winter 2026, Dartmouth CS10
+ */
+
 import java.io.IOException;
 import java.util.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 
 public class HuffmanCodeTree implements Huffman{
@@ -82,7 +89,55 @@ public class HuffmanCodeTree implements Huffman{
 
     @Override
     public void compressFile(Map<Character, String> codeMap, String pathName, String compressedPathName) throws IOException {
+        // read characters from text file
+        BufferedReader input = new BufferedReader(new FileReader(pathName));
 
+        // takes an int that holds the unicode encoding of a character and casts it as a char
+        int charUnicode = input.read();
+
+        // checks if the file is empty
+        while (( charUnicode != -1 )) {
+
+            // casts charUnicode to char
+            char currentCharacter = (char) charUnicode;
+
+            // look up the character's code word in the code map
+            String codeWord = "1010101010";
+
+            // write the sequences of 0's and 1's (the code word) as bits to an output file
+            // creates new compressed file
+            BufferedBitWriter bitOutput = new BufferedBitWriter(compressedPathName);
+
+            // bits are boolean values false = 0 and true = 1
+            boolean bit;
+            for (int i = 0; i < codeWord.length(); i++) {
+                char character = codeWord.charAt(i);
+                // bit is true
+                if (character == '1') {
+                    bit = true;
+                    bitOutput.writeBit(bit);
+                }
+                // bit is false
+                if (character == '0') {
+                    bit = false;
+                    bitOutput.writeBit(bit);
+                }
+            }
+
+            // closes file
+            bitOutput.close();
+
+            // updates charUnicode
+            charUnicode = input.read();
+        }
+        
+        // handles exception where file is empty
+        if (charUnicode == -1) {
+            throw new IOException("File is empty.");
+        }
+        
+        // close file reader
+        input.close();
     }
 
     @Override
