@@ -6,27 +6,24 @@
  * Winter 2026, Dartmouth CS10
  */
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
 
-public class HuffmanCodeTree implements Huffman{
+public class HuffmanCodeTree implements Huffman {
 
 
     @Override
     public Map<Character, Long> countFrequencies(String pathName) throws IOException {
-        Map<Character,Long> result = new HashMap<>();
+        Map<Character, Long> result = new HashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(pathName));
         String line;
         while ((line = reader.readLine()) != null) {
-            for(int i = 0; i<line.length();i++){
+            for (int i = 0; i < line.length(); i++) {
                 Character c = line.charAt(i);
                 if (!result.containsKey(c)) {
                     result.put(c, (long) 1);
-                }
-                else{
-                    result.put(c,result.get(c)+1);
+                } else {
+                    result.put(c, result.get(c) + 1);
                 }
             }
         }
@@ -37,10 +34,10 @@ public class HuffmanCodeTree implements Huffman{
     public BinaryTree<CodeTreeElement> makeCodeTree(Map<Character, Long> frequencies) {
         PriorityQueue<BinaryTree<CodeTreeElement>> pq = new PriorityQueue<>(new TreeComparator());
         //returns if file is empty
-        if(frequencies.isEmpty()){
+        if (frequencies.isEmpty()) {
             return null;
         }
-        for(Character key: frequencies.keySet()){
+        for (Character key : frequencies.keySet()) {
             //creates a new binary tree for each character and adds it to the priority tree
             CodeTreeElement current = new CodeTreeElement(frequencies.get(key), key);
             BinaryTree<CodeTreeElement> currentNode = new BinaryTree<>(current);
@@ -49,7 +46,7 @@ public class HuffmanCodeTree implements Huffman{
         }
 
         //huffman algorithm
-        while(pq.size()>1){
+        while (pq.size() > 1) {
             //creates a binary tree for left node and sets it equal to the lowest freq tree in queue
             BinaryTree<CodeTreeElement> left = pq.peek();
             pq.remove(pq.peek());
@@ -71,19 +68,20 @@ public class HuffmanCodeTree implements Huffman{
 
     @Override
     public Map<Character, String> computeCodes(BinaryTree<CodeTreeElement> codeTree) {
-        Map<Character,String> codes = new HashMap<>();
+        Map<Character, String> codes = new HashMap<>();
         preOrder(codeTree, "", codes);
         return codes;
     }
-    public void preOrder(BinaryTree<CodeTreeElement> root, String code, Map<Character,String> codes) {
+
+    public void preOrder(BinaryTree<CodeTreeElement> root, String code, Map<Character, String> codes) {
         if (root == null) return;
 
-        if(root.isLeaf()){
+        if (root.isLeaf()) {
             codes.put(root.getData().getChar(), code);
             return;
         }
         preOrder(root.getLeft(), code + "0", codes);
-        preOrder(root.getRight(),code + "1",codes);
+        preOrder(root.getRight(), code + "1", codes);
 
     }
 
@@ -96,7 +94,7 @@ public class HuffmanCodeTree implements Huffman{
         int charUnicode = input.read();
 
         // checks if the file is empty
-        while (( charUnicode != -1 )) {
+        while ((charUnicode != -1)) {
 
             // casts charUnicode to char
             char currentCharacter = (char) charUnicode;
@@ -130,18 +128,47 @@ public class HuffmanCodeTree implements Huffman{
             // updates charUnicode
             charUnicode = input.read();
         }
-        
+
         // handles exception where file is empty
         if (charUnicode == -1) {
             throw new IOException("File is empty.");
         }
-        
+
         // close file reader
         input.close();
     }
 
     @Override
     public void decompressFile(String compressedPathName, String decompressedPathName, BinaryTree<CodeTreeElement> codeTree) throws IOException {
+        // creates bit reader to read bits from compressed file
+        BufferedBitReader bitInput = new BufferedBitReader(compressedPathName);
 
+        // creates plain text = decompressed file
+        BufferedWriter output = new BufferedWriter(new FileWriter(decompressedPathName));
+
+        // starts current node with the root
+        BinaryTree<CodeTreeElement> currentNode = codeTree;
+
+        // if there is a bit left to read from compressed file, then bit will be read and either a 0 or 1 will be written on the plain text
+        while (bitInput.hasNext()) {
+            boolean bit = bitInput.readBit();
+            // runs down the code tree until a leaf is reached
+            while (!currentNode.isLeaf()) {
+                // if bit is true (1), go right
+                if (bit == true) {
+                    currentNode = codeTree.getRight();
+                }
+                // if bit is false (0), go left
+                if (bit == false) {
+                    currentNode = codeTree.getLeft();
+                }
+                // when a leaf is reached
+                char decodedCharacter = currentNode.getData().getChar();
+                output.write(decodedCharacter);
+            }
+            // after character is decoded, return to the root
+            currentNode = codeTree;
+        }
     }
 }
+
