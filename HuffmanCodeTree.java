@@ -156,7 +156,7 @@ public class HuffmanCodeTree implements Huffman {
         while (bitInput.hasNext()) {
             boolean bit = bitInput.readBit();
             // runs down the code tree until a leaf is reached
-            while (!currentNode.isLeaf()) {
+
                 // if bit is true (1), go right
                 if (bit == true) {
                     currentNode = currentNode.getRight();
@@ -165,7 +165,7 @@ public class HuffmanCodeTree implements Huffman {
                 if (bit == false) {
                     currentNode = currentNode.getLeft();
                 }
-            }
+
             // when a leaf is reached
             if (currentNode.isLeaf()) {
                 char decodedCharacter = currentNode.getData().getChar();
