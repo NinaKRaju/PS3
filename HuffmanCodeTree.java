@@ -93,6 +93,11 @@ public class HuffmanCodeTree implements Huffman {
         // takes an int that holds the unicode encoding of a character and casts it as a char
         int charUnicode = input.read();
 
+        // handles exception where file is empty
+        if (charUnicode == -1) {
+            throw new IOException("File is empty.");
+        }
+
         // checks if the file is empty
         while ((charUnicode != -1)) {
 
@@ -110,6 +115,7 @@ public class HuffmanCodeTree implements Huffman {
             boolean bit;
             for (int i = 0; i < codeWord.length(); i++) {
                 char character = codeWord.charAt(i);
+                System.out.println(character);
                 // bit is true
                 if (character == '1') {
                     bit = true;
@@ -122,16 +128,14 @@ public class HuffmanCodeTree implements Huffman {
                 }
             }
 
+            // for debugging - remove later
+            System.out.println(bitOutput.toString());
+
             // closes file
             bitOutput.close();
 
             // updates charUnicode
             charUnicode = input.read();
-        }
-
-        // handles exception where file is empty
-        if (charUnicode == -1) {
-            throw new IOException("File is empty.");
         }
 
         // close file reader
