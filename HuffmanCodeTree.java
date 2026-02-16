@@ -17,17 +17,17 @@ public class HuffmanCodeTree implements Huffman {
     public Map<Character, Long> countFrequencies(String pathName) throws IOException {
         Map<Character, Long> result = new HashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(pathName));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            for (int i = 0; i < line.length(); i++) {
-                Character c = line.charAt(i);
-                if (!result.containsKey(c)) {
-                    result.put(c, (long) 1);
-                } else {
-                    result.put(c, result.get(c) + 1);
-                }
+        int charUnicode;
+        while ((charUnicode = reader.read()) != -1) {
+            Character c = (char) charUnicode;
+            if (!result.containsKey(c)) {
+                result.put(c, (long) 1);
+            } else {
+                result.put(c, result.get(c) + 1);
             }
         }
+
+        reader.close();
         return result;
     }
 
