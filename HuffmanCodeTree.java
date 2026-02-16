@@ -100,7 +100,7 @@ public class HuffmanCodeTree implements Huffman {
             char currentCharacter = (char) charUnicode;
 
             // look up the character's code word in the code map
-            String codeWord = "1010101010";
+            String codeWord = codeMap.get(currentCharacter);
 
             // write the sequences of 0's and 1's (the code word) as bits to an output file
             // creates new compressed file
