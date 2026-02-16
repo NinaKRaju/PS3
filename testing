@@ -1,0 +1,43 @@
+/**
+ * Problem Set #3
+ * driver code for testing
+ *
+ * @author Nina Raju
+ * @author Erica Chemmanoor
+ * Winter 2026, Dartmouth CS10
+ */
+
+import java.io.IOException;
+import java.util.Map;
+
+public class testing {
+    public static void main(String[] args) throws IOException {
+
+        String plainPath = "problem sets/hello.txt";
+        String compressedPath = plainPath + ".compressed.txt";
+        String decompressedPath = plainPath + ".decompressed.txt";
+        HuffmanCodeTree huffmanTreeObject = new HuffmanCodeTree();
+
+        // create and print out frequency map
+        Map<Character, Long> frequencyMap = huffmanTreeObject.countFrequencies(plainPath);
+        System.out.println(frequencyMap);
+        System.out.println();
+
+        // create and print out huffman tree
+        BinaryTree<CodeTreeElement> huffmanTree = huffmanTreeObject.makeCodeTree(frequencyMap);
+        System.out.println(huffmanTree);
+
+        // create and print out code map
+        Map<Character, String> codeMap = huffmanTreeObject.computeCodes(huffmanTree);
+        System.out.println(codeMap);
+
+        // compress file
+        huffmanTreeObject.compressFile(codeMap, plainPath, compressedPath);
+        System.out.println("Compressed file written to: " + compressedPath);
+
+        // decompress file
+        huffmanTreeObject.decompressFile(compressedPath, decompressedPath, huffmanTree);
+        System.out.println("Decompressed file written to: " + decompressedPath);
+
+    }
+}
