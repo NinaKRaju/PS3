@@ -1,3 +1,4 @@
+
 /**
  * Problem Set #3
  *
@@ -89,6 +90,7 @@ public class HuffmanCodeTree implements Huffman {
     public void compressFile(Map<Character, String> codeMap, String pathName, String compressedPathName) throws IOException {
         // read characters from text file
         BufferedReader input = new BufferedReader(new FileReader(pathName));
+        BufferedBitWriter bitOutput = new BufferedBitWriter(compressedPathName);
 
         // takes an int that holds the unicode encoding of a character and casts it as a char
         int charUnicode = input.read();
@@ -109,7 +111,7 @@ public class HuffmanCodeTree implements Huffman {
 
             // write the sequences of 0's and 1's (the code word) as bits to an output file
             // creates new compressed file
-            BufferedBitWriter bitOutput = new BufferedBitWriter(compressedPathName);
+
 
             // bits are boolean values false = 0 and true = 1
             boolean bit;
@@ -128,13 +130,14 @@ public class HuffmanCodeTree implements Huffman {
             }
 
             // closes file
-            bitOutput.close();
+
 
             // updates charUnicode
             charUnicode = input.read();
         }
 
         // close file reader
+        bitOutput.close();
         input.close();
     }
 
@@ -156,11 +159,11 @@ public class HuffmanCodeTree implements Huffman {
             while (!currentNode.isLeaf()) {
                 // if bit is true (1), go right
                 if (bit == true) {
-                    currentNode = codeTree.getRight();
+                    currentNode = currentNode.getRight();
                 }
                 // if bit is false (0), go left
                 if (bit == false) {
-                    currentNode = codeTree.getLeft();
+                    currentNode = currentNode.getLeft();
                 }
             }
             // when a leaf is reached
@@ -179,4 +182,3 @@ public class HuffmanCodeTree implements Huffman {
 
     }
 }
-
