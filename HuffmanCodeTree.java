@@ -115,7 +115,6 @@ public class HuffmanCodeTree implements Huffman {
             boolean bit;
             for (int i = 0; i < codeWord.length(); i++) {
                 char character = codeWord.charAt(i);
-                System.out.println(character);
                 // bit is true
                 if (character == '1') {
                     bit = true;
@@ -127,9 +126,6 @@ public class HuffmanCodeTree implements Huffman {
                     bitOutput.writeBit(bit);
                 }
             }
-
-            // for debugging - remove later
-            System.out.println(bitOutput.toString());
 
             // closes file
             bitOutput.close();
@@ -166,13 +162,21 @@ public class HuffmanCodeTree implements Huffman {
                 if (bit == false) {
                     currentNode = codeTree.getLeft();
                 }
-                // when a leaf is reached
-                char decodedCharacter = currentNode.getData().getChar();
-                output.write(decodedCharacter);
             }
-            // after character is decoded, return to the root
-            currentNode = codeTree;
+            // when a leaf is reached
+            if (currentNode.isLeaf()) {
+                char decodedCharacter = currentNode.getData().getChar();
+                System.out.println(decodedCharacter);
+                output.write(decodedCharacter);
+                // after character is decoded, return to the root
+                currentNode = codeTree;
+            }
         }
+        // closes bit reader
+        bitInput.close();
+        // closes file writer
+        output.close();
+
     }
 }
 
